@@ -61,4 +61,15 @@ impl ClientConnection<Connected>{
         let client = Client::new();
         client.post(&self.url).body(message).send().await.unwrap();
     }
+
+    pub async fn send_heartbeat(&self){
+        let message = MessageContainer { message_body: String::from(""), 
+        message_type: MessageTypes::Heartbeat, 
+        command: None };
+
+        let heartbeat = CommandMessage::new(message);
+
+        let client = Client::new();
+        client.post(&self.url).body(heartbeat.to_string()).send().await.unwrap();
+    }
 }
