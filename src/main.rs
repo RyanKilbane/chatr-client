@@ -19,7 +19,6 @@ async fn main() -> io::Result<()>{
     tokio::spawn(async move {
         loop{
             heartbeat_connection.send_heartbeat().await;
-            println!("Sent heartbeat");
             tokio::time::sleep(tokio::time::Duration::from_secs(10)).await;
         }
     });
