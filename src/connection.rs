@@ -51,7 +51,9 @@ impl ClientConnection<Connected>{
         let message = CommandMessage::new(MessageContainer{
             message_body: String::from(""), 
             message_type: MessageTypes::Disconnection, 
-            command: None});
+            command: None,
+            sender: String::from("")
+        });
         self.send(message).await;
         ClientConnection { connected_state: std::marker::PhantomData::<Disconnected>, url: self.url }
     }
@@ -65,7 +67,7 @@ impl ClientConnection<Connected>{
     pub async fn send_heartbeat(&self){
         let message = MessageContainer { message_body: String::from(""), 
         message_type: MessageTypes::Heartbeat, 
-        command: None };
+        command: None, sender: String::from("") };
 
         let heartbeat = CommandMessage::new(message);
 
