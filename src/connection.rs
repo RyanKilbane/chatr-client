@@ -73,7 +73,7 @@ impl ClientConnection<Connected>{
             MessageTypes::Command => {
                 let message = message.to_string();
                 let client = Client::new();
-                client.post(&self.url).body(message).send().await.unwrap();
+                client.post(format!("{}/v1/message/command", &self.url)).body(message).send().await.unwrap();
 
             }
 
