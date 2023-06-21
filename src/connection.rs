@@ -52,7 +52,8 @@ impl ClientConnection<Connected>{
             message_body: String::from(""), 
             message_type: MessageTypes::Disconnection, 
             command: None,
-            sender: String::from("")
+            sender: String::from(""),
+            room: String::new()
         });
         self.send(message).await;
         ClientConnection { connected_state: std::marker::PhantomData::<Disconnected>, url: self.url }
@@ -63,7 +64,10 @@ impl ClientConnection<Connected>{
             MessageTypes::Normal => {
                 let message = message.to_string();
                 let client = Client::new();
-                client.post(&self.url).body(message).send().await.unwrap();
+                let x = client.post(format!("{}/v1/message", &self.url)).body(message).send().await.unwrap();
+                if x.status() != StatusCode::OK || x.status() != StatusCode::CREATED{
+                    println!("Can not send message: {}", x.status())
+                }
             }
 
             MessageTypes::Command => {
@@ -89,7 +93,7 @@ impl ClientConnection<Connected>{
     pub async fn send_heartbeat(&self){
         let message = MessageContainer { message_body: String::from(""), 
         message_type: MessageTypes::Heartbeat, 
-        command: None, sender: String::from("") };
+        command: None, sender: String::from(""), room: String::new() };
 
         let heartbeat = CommandMessage::new(message);
 

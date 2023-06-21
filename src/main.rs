@@ -7,7 +7,7 @@ use message::{client_server::{NormalMessage, CommandMessage}, message::{MessageC
 
 #[tokio::main(flavor="current_thread")]
 async fn main() -> io::Result<()>{
-    let connection = connection::ClientConnection::new("".to_string());
+    let connection = connection::ClientConnection::new("http://127.0.0.1:8081".to_string());
     let connection = match connection.connect().await{
         Ok(connected) => Arc::new(connected),
         Err(e) => {
@@ -36,12 +36,12 @@ async fn main() -> io::Result<()>{
             continue;
         }
         if buffer.starts_with(":"){
-            let container = MessageContainer::new(String::new(), MessageTypes::Command, Some(buffer), sender.to_owned() );
+            let container = MessageContainer::new(String::new(), MessageTypes::Command, Some(buffer), sender.to_owned(), "Default".to_owned());
             let message = CommandMessage::new(container);
             connection.send(message).await;
         } else{
             let container = MessageContainer::new(buffer, 
-                MessageTypes::Normal, None, sender.to_owned());
+                MessageTypes::Normal, None, sender.to_owned(), "Default".to_owned());
             let message = NormalMessage::new(container);
             connection.send(message).await;
         }
