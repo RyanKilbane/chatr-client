@@ -2,12 +2,12 @@ mod connection;
 use tokio;
 use std::io;
 use std::sync::Arc;
-use message::{client_server::NormalMessage, message::{MessageContainer, MessageTypes}, client_server_trait::ClientServer};
+use message::{client_server::{NormalMessage, CommandMessage}, message::{MessageContainer, MessageTypes}, client_server_trait::ClientServer};
 
 
 #[tokio::main(flavor="current_thread")]
 async fn main() -> io::Result<()>{
-    let connection = connection::ClientConnection::new("http://en.wikipedia.org".to_string());
+    let connection = connection::ClientConnection::new("".to_string());
     let connection = match connection.connect().await{
         Ok(connected) => Arc::new(connected),
         Err(e) => {
@@ -32,12 +32,18 @@ async fn main() -> io::Result<()>{
         let mut buffer = String::new();
         io::stdin().read_line(&mut buffer)?;
         let sender = nick.as_ref();
-        if buffer.starts_with(":"){}
-        let container = MessageContainer::new(buffer, 
-            MessageTypes::Normal, None, sender.to_owned());
-        let message = NormalMessage::new(container);
-        println!("{:?}", message);
-        connection.send(message).await;
-
+        if buffer.len() < 1{
+            continue;
+        }
+        if buffer.starts_with(":"){
+            let container = MessageContainer::new(String::new(), MessageTypes::Command, Some(buffer), sender.to_owned() );
+            let message = CommandMessage::new(container);
+            connection.send(message).await;
+        } else{
+            let container = MessageContainer::new(buffer, 
+                MessageTypes::Normal, None, sender.to_owned());
+            let message = NormalMessage::new(container);
+            connection.send(message).await;
+        }
     }
 }

@@ -59,9 +59,31 @@ impl ClientConnection<Connected>{
     }
 
     pub async fn send(&self, message: impl ClientServer) {
-        let message = message.to_string();
-        let client = Client::new();
-        client.post(&self.url).body(message).send().await.unwrap();
+        match message.message_type(){
+            MessageTypes::Normal => {
+                let message = message.to_string();
+                let client = Client::new();
+                client.post(&self.url).body(message).send().await.unwrap();
+            }
+
+            MessageTypes::Command => {
+                let message = message.to_string();
+                let client = Client::new();
+                client.post(&self.url).body(message).send().await.unwrap();
+
+            }
+
+            MessageTypes::Heartbeat => {
+                let message = message.to_string();
+                let client = Client::new();
+                client.post(&self.url).body(message).send().await.unwrap();
+
+            }
+
+            _ => {
+                
+            }
+        }
     }
 
     pub async fn send_heartbeat(&self){
