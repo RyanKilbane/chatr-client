@@ -1,5 +1,4 @@
 mod connection;
-use tokio;
 use std::io;
 use std::sync::Arc;
 use message::{client_server::{NormalMessage, CommandMessage}, message::{MessageContainer, MessageTypes}, client_server_trait::ClientServer};
@@ -32,10 +31,10 @@ async fn main() -> io::Result<()>{
         let mut buffer = String::new();
         io::stdin().read_line(&mut buffer)?;
         let sender = nick.as_ref();
-        if buffer.len() < 1{
+        if buffer.is_empty(){
             continue;
         }
-        if buffer.starts_with(":"){
+        if buffer.starts_with(':'){
             let container = MessageContainer::new(String::new(), MessageTypes::Command, Some(buffer), sender.to_owned(), "Default".to_owned());
             let message = CommandMessage::new(container);
             connection.send(message).await;

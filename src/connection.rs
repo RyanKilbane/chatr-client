@@ -30,7 +30,7 @@ pub struct ClientConnection<State = Disconnected>{
 
 impl ClientConnection<Disconnected>{
     pub fn new(url: String) -> ClientConnection<Disconnected>{
-        ClientConnection { connected_state: Default::default(), url: url }
+        ClientConnection { connected_state: Default::default(), url }
     }
     pub async fn connect(&self) -> Result<ClientConnection<Connected>, ConnectionError>{
         let client = Client::new();
