@@ -47,7 +47,7 @@ impl ClientConnection<Disconnected>{
 }
 
 impl ClientConnection<Connected>{
-    pub async fn disconnect(self) -> ClientConnection<Disconnected>{
+    pub async fn _disconnect(self) -> ClientConnection<Disconnected>{
         let message = CommandMessage::new(MessageContainer{
             message_body: String::from(""), 
             message_type: MessageTypes::Disconnection, 
