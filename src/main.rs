@@ -87,7 +87,7 @@ fn handle_local_commands(lexer: lexer::Lexer<lexer::Parsed>, client_attributes: 
         lexer::Tokens::Nick => {
             match lexer.tokens.get(1).unwrap(){
                 lexer::Tokens::Arg(new_nick) => {
-                    ClientAttributes::new(new_nick.to_string(), client_attributes.room.to_owned())
+                    ClientAttributes::new(new_nick.to_string(), client_attributes.room)
                 }
 
                 _ => {
@@ -100,7 +100,7 @@ fn handle_local_commands(lexer: lexer::Lexer<lexer::Parsed>, client_attributes: 
         lexer::Tokens::Join => {
             match lexer.tokens.get(1).unwrap(){
                 lexer::Tokens::Arg(new_room) => {
-                    ClientAttributes::new(client_attributes.nick.to_string(), Some(new_room.to_string()))
+                    ClientAttributes::new(client_attributes.nick, Some(new_room.to_string()))
                 }
 
                 _ => {
